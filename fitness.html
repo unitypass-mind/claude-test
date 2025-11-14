@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>피트니스 센터 회원관리</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f7;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            color: #1d1d1f;
+            font-size: 2.5em;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #86868b;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #007aff;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: -0.01em;
+        }
+
+        .btn-primary {
+            background: #007aff;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: #0051d5;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            border: 1px solid #d2d2d7;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8ed;
+        }
+
+        .btn-danger {
+            background: #ff3b30;
+            color: white;
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        .btn-edit {
+            background: #34c759;
+            color: white;
+            padding: 8px 16px;
+            font-size: 0.9em;
+            margin-right: 8px;
+        }
+
+        .btn-edit:hover {
+            background: #28a745;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .member-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .member-table thead {
+            background: #f5f5f7;
+        }
+
+        .member-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #1d1d1f;
+            font-size: 0.95em;
+            letter-spacing: -0.01em;
+        }
+
+        .member-table td {
+            padding: 16px;
+            border-bottom: 1px solid #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .member-table tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #e8f5e9;
+            color: #34c759;
+        }
+
+        .status-expired {
+            background: #ffebee;
+            color: #ff3b30;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #1d1d1f;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #007aff;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .form-actions button {
+            flex: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #86868b;
+        }
+
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .member-table {
+                font-size: 0.9em;
+            }
+
+            .member-table th,
+            .member-table td {
+                padding: 12px 8px;
+            }
+
+            .btn {
+                padding: 10px 16px;
+                font-size: 0.9em;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>피트니스 센터</h1>
+        <p class="subtitle">회원 관리 시스템</p>
+    </div>
+
+    <div class="controls">
+        <input type="text" class="search-box" id="searchInput" placeholder="회원 검색 (이름, 전화번호)">
+        <button class="btn btn-secondary" onclick="filterMembers('all')">전체</button>
+        <button class="btn btn-secondary" onclick="filterMembers('active')">활성</button>
+        <button class="btn btn-secondary" onclick="filterMembers('expired')">만료</button>
+        <button class="btn btn-primary" onclick="openModal()">+ 회원 등록</button>
+    </div>
+
+    <div class="container">
+        <table class="member-table" id="memberTable">
+            <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>전화번호</th>
+                    <th>회원권</th>
+                    <th>시작일</th>
+                    <th>종료일</th>
+                    <th>상태</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody id="memberTableBody">
+                <!-- Members will be inserted here -->
+            </tbody>
+        </table>
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-state-icon">📋</div>
+            <h3>등록된 회원이 없습니다</h3>
+            <p>새 회원을 등록해주세요</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="memberModal">
+        <div class="modal-content">
+            <h2 class="modal-header" id="modalTitle">회원 등록</h2>
+            <form id="memberForm">
+                <div class="form-group">
+                    <label>이름</label>
+                    <input type="text" id="memberName" required>
+                </div>
+                <div class="form-group">
+                    <label>전화번호</label>
+                    <input type="tel" id="memberPhone" placeholder="010-1234-5678" required>
+                </div>
+                <div class="form-group">
+                    <label>회원권 종류</label>
+                    <select id="membershipType" required>
+                        <option value="">선택하세요</option>
+                        <option value="1개월">1개월</option>
+                        <option value="3개월">3개월</option>
+                        <option value="6개월">6개월</option>
+                        <option value="12개월">12개월</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>시작일</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div class="form-group">
+                    <label>종료일</label>
+                    <input type="date" id="endDate" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">취소</button>
+                    <button type="submit" class="btn btn-primary">저장</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let members = JSON.parse(localStorage.getItem('fitnessMembers')) || [];
+        let editingMemberId = null;
+        let currentFilter = 'all';
+        let searchTerm = '';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMembers();
+
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                searchTerm = e.target.value.toLowerCase();
+                renderMembers();
+            });
+
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').value = today;
+
+            // Auto calculate end date based on membership type
+            document.getElementById('membershipType').addEventListener('change', calculateEndDate);
+            document.getElementById('startDate').addEventListener('change', calculateEndDate);
+        });
+
+        function calculateEndDate() {
+            const startDate = document.getElementById('startDate').value;
+            const membershipType = document.getElementById('membershipType').value;
+
+            if (startDate && membershipType) {
+                const start = new Date(startDate);
+                let months = parseInt(membershipType);
+
+                const endDate = new Date(start);
+                endDate.setMonth(endDate.getMonth() + months);
+
+                document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
+            }
+        }
+
+        function openModal(memberId = null) {
+            editingMemberId = memberId;
+            const modal = document.getElementById('memberModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const form = document.getElementById('memberForm');
+
+            if (memberId) {
+                modalTitle.textContent = '회원 정보 수정';
+                const member = members.find(m => m.id === memberId);
+                document.getElementById('memberName').value = member.name;
+                document.getElementById('memberPhone').value = member.phone;
+                document.getElementById('membershipType').value = member.membershipType;
+                document.getElementById('startDate').value = member.startDate;
+                document.getElementById('endDate').value = member.endDate;
+            } else {
+                modalTitle.textContent = '회원 등록';
+                form.reset();
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('startDate').value = today;
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('memberModal');
+            modal.classList.remove('active');
+            editingMemberId = null;
+            document.getElementById('memberForm').reset();
+        }
+
+        document.getElementById('memberForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const memberData = {
+                name: document.getElementById('memberName').value,
+                phone: document.getElementById('memberPhone').value,
+                membershipType: document.getElementById('membershipType').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value
+            };
+
+            if (editingMemberId) {
+                // Update existing member
+                const index = members.findIndex(m => m.id === editingMemberId);
+                members[index] = { ...members[index], ...memberData };
+            } else {
+                // Add new member
+                memberData.id = Date.now();
+                members.push(memberData);
+            }
+
+            localStorage.setItem('fitnessMembers', JSON.stringify(members));
+            renderMembers();
+            closeModal();
+        });
+
+        function deleteMember(id) {
+            if (confirm('정말로 이 회원을 삭제하시겠습니까?')) {
+                members = members.filter(m => m.id !== id);
+                localStorage.setItem('fitnessMembers', JSON.stringify(members));
+                renderMembers();
+            }
+        }
+
+        function getMemberStatus(endDate) {
+            const today = new Date();
+            const end = new Date(endDate);
+            return end >= today ? 'active' : 'expired';
+        }
+
+        function filterMembers(filter) {
+            currentFilter = filter;
+            renderMembers();
+        }
+
+        function renderMembers() {
+            const tbody = document.getElementById('memberTableBody');
+            const emptyState = document.getElementById('emptyState');
+
+            let filteredMembers = members.filter(member => {
+                const matchesSearch = member.name.toLowerCase().includes(searchTerm) ||
+                                    member.phone.includes(searchTerm);
+
+                const status = getMemberStatus(member.endDate);
+                const matchesFilter = currentFilter === 'all' || status === currentFilter;
+
+                return matchesSearch && matchesFilter;
+            });
+
+            if (filteredMembers.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            tbody.innerHTML = filteredMembers.map(member => {
+                const status = getMemberStatus(member.endDate);
+                const statusClass = status === 'active' ? 'status-active' : 'status-expired';
+                const statusText = status === 'active' ? '활성' : '만료';
+
+                return `
+                    <tr>
+                        <td>${member.name}</td>
+                        <td>${member.phone}</td>
+                        <td>${member.membershipType}</td>
+                        <td>${member.startDate}</td>
+                        <td>${member.endDate}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <button class="btn btn-edit" onclick="openModal(${member.id})">수정</button>
+                            <button class="btn btn-danger" onclick="deleteMember(${member.id})">삭제</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('memberModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
