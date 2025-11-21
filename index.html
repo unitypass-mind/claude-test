@@ -3,306 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오늘의 명언</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f7;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 60px 50px;
-            max-width: 800px;
-            width: 100%;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        h1 {
-            color: #1d1d1f;
-            margin-bottom: 48px;
-            font-size: 2.8em;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-        }
-
-        .quote-container {
-            min-height: 220px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            margin-bottom: 40px;
-        }
-
-        .quote-text {
-            font-size: 1.6em;
-            line-height: 1.5;
-            color: #1d1d1f;
-            margin-bottom: 24px;
-            font-weight: 500;
-            position: relative;
-            animation: fadeIn 0.5s ease-out;
-            letter-spacing: -0.01em;
-        }
-
-        .quote-text::before {
-            content: '"';
-            font-size: 2.5em;
-            color: #86868b;
-            opacity: 0.4;
-            position: absolute;
-            left: -35px;
-            top: -15px;
-            font-weight: 400;
-        }
-
-        .quote-text::after {
-            content: '"';
-            font-size: 2.5em;
-            color: #86868b;
-            opacity: 0.4;
-            font-weight: 400;
-        }
-
-        .quote-author {
-            font-size: 1.1em;
-            color: #86868b;
-            font-weight: 500;
-            animation: fadeIn 0.5s ease-out 0.1s backwards;
-            letter-spacing: -0.01em;
-        }
-
-        .button-container {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        button {
-            background: #007aff;
-            color: white;
-            border: none;
-            padding: 11px 22px;
-            font-size: 0.94em;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 500;
-            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
-            letter-spacing: -0.01em;
-        }
-
-        button:hover {
-            background: #0051d5;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .quote-number {
-            margin-top: 36px;
-            color: #86868b;
-            font-size: 0.9em;
-            font-weight: 400;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 40px 28px;
-                border-radius: 20px;
-            }
-
-            h1 {
-                font-size: 2.2em;
-                margin-bottom: 36px;
-            }
-
-            .quote-text {
-                font-size: 1.3em;
-            }
-
-            .quote-text::before,
-            .quote-text::after {
-                font-size: 2em;
-            }
-
-            button {
-                padding: 10px 18px;
-                font-size: 0.9em;
-            }
-        }
-    </style>
+    <title>여성전용 피트니스 센터 - 로그인</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/auth.css">
 </head>
 <body>
-    <div class="container">
-        <h1>오늘의 명언</h1>
-        <div class="quote-container">
-            <div class="quote-text" id="quoteText"></div>
-            <div class="quote-author" id="quoteAuthor"></div>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="logo-section">
+                <div class="logo-icon">💪</div>
+                <h1 class="app-title">FitLady</h1>
+                <p class="app-subtitle">여성전용 피트니스 센터</p>
+            </div>
+
+            <div class="mode-selection" id="modeSelection">
+                <h2>로그인 모드 선택</h2>
+                <div class="mode-buttons">
+                    <button class="mode-btn admin-mode" onclick="selectMode('admin')">
+                        <span class="mode-icon">🔐</span>
+                        <span class="mode-title">관리자 모드</span>
+                        <span class="mode-desc">회원 관리 및 센터 운영</span>
+                    </button>
+                    <button class="mode-btn member-mode" onclick="selectMode('member')">
+                        <span class="mode-icon">👤</span>
+                        <span class="mode-title">회원 모드</span>
+                        <span class="mode-desc">내 정보 및 예약 확인</span>
+                    </button>
+                </div>
+            </div>
+
+            <form class="login-form hidden" id="loginForm">
+                <div class="form-header">
+                    <button type="button" class="back-btn" onclick="backToMode()">← 돌아가기</button>
+                    <h2 id="loginTitle">관리자 로그인</h2>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">아이디</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="아이디를 입력하세요"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">비밀번호</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="비밀번호를 입력하세요"
+                        required
+                    >
+                </div>
+
+                <div class="form-group remember-me">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe" name="rememberMe">
+                        <span>로그인 상태 유지</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn">로그인</button>
+
+                <div class="form-footer" id="memberOnlyOptions">
+                    <a href="#" class="link">비밀번호 찾기</a>
+                </div>
+            </form>
+
+            <div class="loading-overlay hidden" id="loadingOverlay">
+                <div class="spinner"></div>
+                <p>로그인 중...</p>
+            </div>
         </div>
-        <div class="button-container">
-            <button onclick="prevQuote()">이전</button>
-            <button onclick="getRandomQuote()">랜덤</button>
-            <button onclick="nextQuote()">다음</button>
-        </div>
-        <div class="quote-number" id="quoteNumber"></div>
     </div>
 
-    <script>
-        const quotes = [
-            {
-                text: "어둠을 저주하기보다는 작은 촛불 하나를 켜라.",
-                author: "공자"
-            },
-            {
-                text: "성공은 최종적인 것이 아니며, 실패는 치명적인 것이 아니다. 중요한 것은 계속할 용기다.",
-                author: "윈스턴 처칠"
-            },
-            {
-                text: "삶이 있는 한 희망은 있다.",
-                author: "키케로"
-            },
-            {
-                text: "단순하게 살아라. 현대인은 쓸데없는 절차와 일 때문에 얼마나 복잡한 삶을 살아가는가?",
-                author: "이드리스 샤흐"
-            },
-            {
-                text: "계단을 밟아야 올라갈 수 있다.",
-                author: "터키 속담"
-            },
-            {
-                text: "행복은 습관이다. 그것을 몸에 지니라.",
-                author: "허버드"
-            },
-            {
-                text: "당신이 할 수 있다고 믿든 할 수 없다고 믿든 믿는 대로 될 것이다.",
-                author: "헨리 포드"
-            },
-            {
-                text: "1퍼센트의 가능성, 그것이 나의 길이다.",
-                author: "나폴레옹"
-            },
-            {
-                text: "고생 없이는 얻는 것도 없다.",
-                author: "벤자민 프랭클린"
-            },
-            {
-                text: "자신감 있는 표정을 지으면 자신감이 생긴다.",
-                author: "찰스 다윈"
-            },
-            {
-                text: "오늘을 붙들어라. 되도록이면 내일에 의지하지 말라.",
-                author: "호라티우스"
-            },
-            {
-                text: "배우는 것을 멈추는 사람은 늙은 사람이다. 계속 배우는 사람은 젊은이다.",
-                author: "헨리 포드"
-            },
-            {
-                text: "행동은 모든 성공의 가장 기초적인 열쇠이다.",
-                author: "파블로 피카소"
-            },
-            {
-                text: "큰 목표를 이루고 싶으면 허락을 구하지 마라.",
-                author: "익명"
-            },
-            {
-                text: "실패는 성공의 어머니다.",
-                author: "토마스 에디슨"
-            },
-            {
-                text: "하루하루를 살아라. 어제는 지나갔고, 내일은 아직 오지 않았다.",
-                author: "달라이 라마"
-            },
-            {
-                text: "인생은 자전거를 타는 것과 같다. 균형을 유지하려면 계속 움직여야 한다.",
-                author: "알베르트 아인슈타인"
-            },
-            {
-                text: "시작이 반이다.",
-                author: "한국 속담"
-            },
-            {
-                text: "꿈을 계속 간직하고 있으면 반드시 실현할 때가 온다.",
-                author: "괴테"
-            },
-            {
-                text: "좋은 일은 빨리 하는 것이 좋다. 나쁜 일은 천천히 해도 좋다.",
-                author: "제퍼슨"
-            }
-        ];
+    <div class="toast hidden" id="toast">
+        <span class="toast-message"></span>
+    </div>
 
-        let currentIndex = 0;
-
-        function displayQuote(index) {
-            const quoteText = document.getElementById('quoteText');
-            const quoteAuthor = document.getElementById('quoteAuthor');
-            const quoteNumber = document.getElementById('quoteNumber');
-
-            // 애니메이션을 위해 클래스 제거 후 재추가
-            quoteText.style.animation = 'none';
-            quoteAuthor.style.animation = 'none';
-
-            setTimeout(() => {
-                quoteText.textContent = quotes[index].text;
-                quoteAuthor.textContent = '- ' + quotes[index].author;
-                quoteNumber.textContent = `${index + 1} / ${quotes.length}`;
-
-                quoteText.style.animation = 'fadeIn 0.6s ease-in';
-                quoteAuthor.style.animation = 'fadeIn 0.6s ease-in 0.2s backwards';
-            }, 10);
-        }
-
-        function getRandomQuote() {
-            const randomIndex = Math.floor(Math.random() * quotes.length);
-            currentIndex = randomIndex;
-            displayQuote(currentIndex);
-        }
-
-        function prevQuote() {
-            currentIndex = (currentIndex - 1 + quotes.length) % quotes.length;
-            displayQuote(currentIndex);
-        }
-
-        function nextQuote() {
-            currentIndex = (currentIndex + 1) % quotes.length;
-            displayQuote(currentIndex);
-        }
-
-        // 페이지 로드 시 랜덤 명언 표시
-        window.onload = function() {
-            getRandomQuote();
-        };
-    </script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>

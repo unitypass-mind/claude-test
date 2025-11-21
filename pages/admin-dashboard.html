@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 대시보드 - FitLady</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <span class="sidebar-logo-icon">💪</span>
+                    <span>FitLady</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">메인</div>
+                    <a href="#dashboard" class="nav-item active" onclick="navigateTo('dashboard')">
+                        <span class="nav-icon">📊</span>
+                        <span>대시보드</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">회원 관리</div>
+                    <a href="#members" class="nav-item" onclick="navigateTo('members')">
+                        <span class="nav-icon">👥</span>
+                        <span>회원 목록</span>
+                    </a>
+                    <a href="#payments" class="nav-item" onclick="navigateTo('payments')">
+                        <span class="nav-icon">💳</span>
+                        <span>결제 관리</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">운영 관리</div>
+                    <a href="#attendance" class="nav-item" onclick="navigateTo('attendance')">
+                        <span class="nav-icon">✓</span>
+                        <span>출석 관리</span>
+                    </a>
+                    <a href="#schedule" class="nav-item" onclick="navigateTo('schedule')">
+                        <span class="nav-icon">📅</span>
+                        <span>일정 관리</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">A</div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">관리자</div>
+                        <div class="user-role">관리자</div>
+                    </div>
+                    <button class="logout-btn" onclick="handleLogout()" title="로그아웃">
+                        🚪
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+                <h1 class="page-title" id="pageTitle">대시보드</h1>
+
+                <div class="top-bar-actions">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input
+                            type="text"
+                            class="search-input"
+                            placeholder="회원 검색..."
+                            id="searchInput"
+                        >
+                    </div>
+                    <button class="notification-btn">
+                        🔔
+                        <span class="notification-badge">3</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area" id="contentArea">
+                <!-- 대시보드 컨텐츠 (기본) -->
+                <div id="dashboardContent">
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">전체 회원</div>
+                                <div class="stat-icon">👥</div>
+                            </div>
+                            <div class="stat-value" id="totalMembers">0</div>
+                            <div class="stat-change positive">
+                                <span>↑ 12%</span>
+                                <span>지난달 대비</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">활성 회원</div>
+                                <div class="stat-icon">✓</div>
+                            </div>
+                            <div class="stat-value" id="activeMembers">0</div>
+                            <div class="stat-change positive">
+                                <span>↑ 8%</span>
+                                <span>지난달 대비</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">이번 달 매출</div>
+                                <div class="stat-icon">💰</div>
+                            </div>
+                            <div class="stat-value" id="monthlyRevenue">0원</div>
+                            <div class="stat-change positive">
+                                <span>↑ 15%</span>
+                                <span>지난달 대비</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">오늘 출석</div>
+                                <div class="stat-icon">📊</div>
+                            </div>
+                            <div class="stat-value" id="todayAttendance">0</div>
+                            <div class="stat-change">
+                                <span>오늘 출석한 회원 수</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Members Table -->
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">최근 등록 회원</h3>
+                            <div class="table-actions">
+                                <button class="btn btn-primary btn-sm" onclick="navigateTo('members')">
+                                    전체 보기
+                                </button>
+                            </div>
+                        </div>
+
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>연락처</th>
+                                    <th>회원권</th>
+                                    <th>등록일</th>
+                                    <th>상태</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentMembersTable">
+                                <tr>
+                                    <td colspan="5" class="text-center">데이터를 불러오는 중...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 다른 페이지 컨텐츠는 JavaScript로 동적 로드 -->
+                <div id="membersContent" class="hidden"></div>
+                <div id="paymentsContent" class="hidden"></div>
+                <div id="attendanceContent" class="hidden"></div>
+                <div id="scheduleContent" class="hidden"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast hidden" id="toast">
+        <span class="toast-message"></span>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay hidden" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>로딩 중...</p>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        // 페이지 로드 시 인증 체크
+        if (!auth.checkPageAccess('admin')) {
+            // 리다이렉트 처리는 checkPageAccess에서 수행
+        }
+
+        // 사용자 정보 표시
+        const user = auth.getCurrentUser();
+        if (user) {
+            document.getElementById('userName').textContent = user.name || '관리자';
+            document.getElementById('userAvatar').textContent = (user.name || 'Admin')[0];
+        }
+
+        // 사이드바 토글 (모바일)
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        // 네비게이션
+        let currentView = 'dashboard';
+
+        function navigateTo(view) {
+            // 모든 컨텐츠 숨기기
+            document.getElementById('dashboardContent').classList.add('hidden');
+            document.getElementById('membersContent').classList.add('hidden');
+            document.getElementById('paymentsContent').classList.add('hidden');
+            document.getElementById('attendanceContent').classList.add('hidden');
+            document.getElementById('scheduleContent').classList.add('hidden');
+
+            // 선택한 컨텐츠 표시
+            const contentId = view + 'Content';
+            const contentEl = document.getElementById(contentId);
+            if (contentEl) {
+                contentEl.classList.remove('hidden');
+            }
+
+            // 네비게이션 활성화 상태 변경
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event?.currentTarget?.classList.add('active');
+
+            // 페이지 타이틀 변경
+            const titles = {
+                dashboard: '대시보드',
+                members: '회원 관리',
+                payments: '결제 관리',
+                attendance: '출석 관리',
+                schedule: '일정 관리'
+            };
+            document.getElementById('pageTitle').textContent = titles[view] || '대시보드';
+
+            currentView = view;
+
+            // 해당 페이지 데이터 로드
+            loadViewData(view);
+
+            // 모바일에서 사이드바 닫기
+            if (window.innerWidth <= 1024) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+        }
+
+        // 뷰 데이터 로드
+        function loadViewData(view) {
+            switch (view) {
+                case 'dashboard':
+                    loadDashboardData();
+                    break;
+                case 'members':
+                    loadMembersData();
+                    break;
+                case 'payments':
+                    loadPaymentsData();
+                    break;
+                case 'attendance':
+                    loadAttendanceData();
+                    break;
+                case 'schedule':
+                    loadScheduleData();
+                    break;
+            }
+        }
+
+        // 대시보드 데이터 로드
+        async function loadDashboardData() {
+            // Mock 데이터로 표시
+            document.getElementById('totalMembers').textContent = '156';
+            document.getElementById('activeMembers').textContent = '142';
+            document.getElementById('monthlyRevenue').textContent = NumberUtils.formatCurrency(12450000);
+            document.getElementById('todayAttendance').textContent = '87';
+
+            // 최근 회원 데이터 (샘플)
+            const recentMembers = [
+                { name: '김민지', phone: '010-1234-5678', membership: '3개월권', date: '2024-01-15', status: 'active' },
+                { name: '이수진', phone: '010-2345-6789', membership: '1개월권', date: '2024-01-14', status: 'active' },
+                { name: '박지은', phone: '010-3456-7890', membership: '6개월권', date: '2024-01-13', status: 'active' }
+            ];
+
+            const tbody = document.getElementById('recentMembersTable');
+            tbody.innerHTML = recentMembers.map(member => `
+                <tr>
+                    <td>${member.name}</td>
+                    <td>${StringUtils.formatPhone(member.phone)}</td>
+                    <td>${member.membership}</td>
+                    <td>${member.date}</td>
+                    <td><span class="badge badge-success">활성</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function loadMembersData() {
+            document.getElementById('membersContent').innerHTML = `
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">회원 목록</h3>
+                        <div class="table-actions">
+                            <button class="btn btn-primary">회원 등록</button>
+                        </div>
+                    </div>
+                    <p class="text-center" style="padding: 40px;">회원 관리 기능은 member-manage.js에서 구현됩니다.</p>
+                </div>
+            `;
+        }
+
+        function loadPaymentsData() {
+            document.getElementById('paymentsContent').innerHTML = `
+                <p class="text-center" style="padding: 40px;">결제 관리 기능은 payment-manage.js에서 구현됩니다.</p>
+            `;
+        }
+
+        function loadAttendanceData() {
+            document.getElementById('attendanceContent').innerHTML = `
+                <p class="text-center" style="padding: 40px;">출석 관리 기능은 admin/attendance.js에서 구현됩니다.</p>
+            `;
+        }
+
+        function loadScheduleData() {
+            document.getElementById('scheduleContent').innerHTML = `
+                <p class="text-center" style="padding: 40px;">일정 관리 기능은 admin/schedule.js에서 구현됩니다.</p>
+            `;
+        }
+
+        // 초기 데이터 로드
+        loadDashboardData();
+    </script>
+</body>
+</html>

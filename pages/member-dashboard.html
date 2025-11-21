@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 대시보드 - FitLady</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/member.css">
+</head>
+<body>
+    <div class="member-dashboard">
+        <!-- Member Header -->
+        <header class="member-header">
+            <div class="member-header-content">
+                <div class="member-welcome">
+                    <div class="member-avatar-large" id="memberAvatar">K</div>
+                    <div class="member-greeting">
+                        <h1 id="memberName">안녕하세요, 회원님!</h1>
+                        <p id="membershipInfo">활성 회원권: 3개월권 (D-45)</p>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <button class="header-btn" onclick="handleLogout()">로그아웃</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Member Navigation -->
+        <nav class="member-nav">
+            <div class="member-nav-content">
+                <a href="#home" class="member-nav-item active" onclick="navigateToSection('home')">
+                    홈
+                </a>
+                <a href="#attendance" class="member-nav-item" onclick="navigateToSection('attendance')">
+                    출석 체크
+                </a>
+                <a href="#schedule" class="member-nav-item" onclick="navigateToSection('schedule')">
+                    예약 관리
+                </a>
+                <a href="#myinfo" class="member-nav-item" onclick="navigateToSection('myinfo')">
+                    내 정보
+                </a>
+            </div>
+        </nav>
+
+        <!-- Member Content -->
+        <div class="member-content">
+            <!-- Home Section (기본) -->
+            <div id="homeSection">
+                <!-- Membership Card -->
+                <div class="membership-card">
+                    <div class="membership-content">
+                        <div class="membership-header">
+                            <div>
+                                <div class="membership-type">3개월 회원권</div>
+                                <h2 style="font-size: 24px; margin-top: 8px;" id="memberNameCard">김회원님</h2>
+                            </div>
+                            <div class="membership-status">활성</div>
+                        </div>
+
+                        <div class="membership-info">
+                            <div class="membership-info-item">
+                                <h3>시작일</h3>
+                                <p id="startDate">2024-01-01</p>
+                            </div>
+                            <div class="membership-info-item">
+                                <h3>만료일</h3>
+                                <p id="endDate">2024-04-01</p>
+                            </div>
+                            <div class="membership-info-item">
+                                <h3>남은 기간</h3>
+                                <p id="daysLeft">45일</p>
+                            </div>
+                        </div>
+
+                        <div class="membership-progress">
+                            <div class="progress-label">
+                                <span>이용 기간</span>
+                                <span id="progressPercent">50%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <a href="#" class="action-card" onclick="navigateToSection('attendance'); return false;">
+                        <div class="action-icon">✓</div>
+                        <h3 class="action-title">출석 체크</h3>
+                        <p class="action-desc">오늘의 출석을 체크하세요</p>
+                    </a>
+
+                    <a href="#" class="action-card" onclick="navigateToSection('schedule'); return false;">
+                        <div class="action-icon">📅</div>
+                        <h3 class="action-title">예약하기</h3>
+                        <p class="action-desc">PT 및 강습 예약</p>
+                    </a>
+
+                    <a href="#" class="action-card" onclick="navigateToSection('myinfo'); return false;">
+                        <div class="action-icon">👤</div>
+                        <h3 class="action-title">내 정보</h3>
+                        <p class="action-desc">회원 정보 조회 및 수정</p>
+                    </a>
+                </div>
+
+                <!-- Upcoming Schedule -->
+                <div class="schedule-section">
+                    <div class="section-header">
+                        <h2 class="section-title">다가오는 일정</h2>
+                        <button class="btn btn-outline btn-sm" onclick="navigateToSection('schedule')">
+                            전체 보기
+                        </button>
+                    </div>
+
+                    <div class="schedule-list" id="upcomingSchedules">
+                        <div class="empty-state">
+                            <div class="empty-icon">📅</div>
+                            <h3 class="empty-title">예약된 일정이 없습니다</h3>
+                            <p class="empty-desc">PT나 강습을 예약해보세요!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attendance Stats -->
+                <div class="schedule-section">
+                    <div class="section-header">
+                        <h2 class="section-title">이번 달 출석 현황</h2>
+                        <span class="text-secondary" id="attendanceCount">15회 출석</span>
+                    </div>
+
+                    <div class="attendance-grid" id="attendanceCalendar">
+                        <!-- 출석 캘린더는 JavaScript로 생성 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance Section -->
+            <div id="attendanceSection" class="hidden">
+                <div class="schedule-section">
+                    <div class="section-header">
+                        <h2 class="section-title">출석 체크</h2>
+                    </div>
+
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <div style="font-size: 80px; margin-bottom: 24px;">✓</div>
+                        <h2 style="font-size: 28px; margin-bottom: 16px;">출석 체크</h2>
+                        <p style="color: var(--color-text-secondary); margin-bottom: 32px;">
+                            아래 버튼을 눌러 오늘의 출석을 체크하세요
+                        </p>
+                        <button class="btn btn-primary btn-lg" onclick="checkAttendance()">
+                            출석 체크하기
+                        </button>
+                        <div id="lastCheckIn" class="mt-lg text-secondary"></div>
+                    </div>
+
+                    <div class="section-header" style="margin-top: 48px;">
+                        <h3>출석 기록</h3>
+                    </div>
+                    <p class="text-center text-secondary">출석 체크 기능은 member/attendance.js에서 구현됩니다.</p>
+                </div>
+            </div>
+
+            <!-- Schedule Section -->
+            <div id="scheduleSection" class="hidden">
+                <div class="schedule-section">
+                    <div class="section-header">
+                        <h2 class="section-title">예약 관리</h2>
+                        <button class="btn btn-primary btn-sm">새 예약</button>
+                    </div>
+                    <p class="text-center text-secondary">예약 관리 기능은 member/schedule.js에서 구현됩니다.</p>
+                </div>
+            </div>
+
+            <!-- My Info Section -->
+            <div id="myinfoSection" class="hidden">
+                <div class="schedule-section">
+                    <div class="section-header">
+                        <h2 class="section-title">내 정보</h2>
+                        <button class="btn btn-outline btn-sm">정보 수정</button>
+                    </div>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">이름</div>
+                            <div class="info-value" id="infoName">김회원</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">연락처</div>
+                            <div class="info-value" id="infoPhone">010-1234-5678</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">이메일</div>
+                            <div class="info-value" id="infoEmail">member@example.com</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">생년월일</div>
+                            <div class="info-value" id="infoBirthDate">1990-01-01</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">회원 등록일</div>
+                            <div class="info-value" id="infoJoinDate">2024-01-01</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">회원 상태</div>
+                            <div class="info-value">
+                                <span class="badge badge-success">활성</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-center text-secondary" style="margin-top: 40px;">
+                        상세 정보 관리 기능은 member/my-info.js에서 구현됩니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast hidden" id="toast">
+        <span class="toast-message"></span>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        // 페이지 로드 시 인증 체크
+        if (!auth.checkPageAccess('member')) {
+            // 리다이렉트 처리는 checkPageAccess에서 수행
+        }
+
+        // 사용자 정보 표시
+        const user = auth.getCurrentUser();
+        if (user) {
+            document.getElementById('memberName').textContent = `안녕하세요, ${user.name}님!`;
+            document.getElementById('memberNameCard').textContent = `${user.name}님`;
+            document.getElementById('memberAvatar').textContent = user.name[0];
+
+            // 내 정보 섹션
+            document.getElementById('infoName').textContent = user.name;
+            document.getElementById('infoPhone').textContent = StringUtils.formatPhone(user.phone || '010-1234-5678');
+            document.getElementById('infoEmail').textContent = user.email || 'member@example.com';
+            document.getElementById('infoBirthDate').textContent = user.birthDate || '1990-01-01';
+            document.getElementById('infoJoinDate').textContent = DateUtils.formatDate(user.joinDate || new Date());
+        }
+
+        // 섹션 네비게이션
+        function navigateToSection(section) {
+            // 모든 섹션 숨기기
+            document.getElementById('homeSection').classList.add('hidden');
+            document.getElementById('attendanceSection').classList.add('hidden');
+            document.getElementById('scheduleSection').classList.add('hidden');
+            document.getElementById('myinfoSection').classList.add('hidden');
+
+            // 선택한 섹션 표시
+            document.getElementById(section + 'Section').classList.remove('hidden');
+
+            // 네비게이션 활성화 상태 변경
+            document.querySelectorAll('.member-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event?.currentTarget?.classList.add('active');
+
+            // 페이지 스크롤 최상단으로
+            window.scrollTo(0, 0);
+        }
+
+        // 출석 체크
+        function checkAttendance() {
+            Toast.success('출석이 완료되었습니다!');
+            const now = DateUtils.getNow();
+            document.getElementById('lastCheckIn').textContent = `마지막 출석: ${now}`;
+        }
+
+        // 출석 캘린더 생성 (샘플)
+        function generateAttendanceCalendar() {
+            const calendar = document.getElementById('attendanceCalendar');
+            const daysInMonth = 31;
+            const attendedDays = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29];
+
+            let html = '';
+            for (let i = 1; i <= daysInMonth; i++) {
+                const isPresent = attendedDays.includes(i);
+                html += `
+                    <div class="attendance-day ${isPresent ? 'present' : 'absent'}">
+                        <div class="day-number">${i}</div>
+                    </div>
+                `;
+            }
+            calendar.innerHTML = html;
+        }
+
+        // 회원권 진행률 계산
+        function calculateMembershipProgress() {
+            const startDate = new Date('2024-01-01');
+            const endDate = new Date('2024-04-01');
+            const today = new Date();
+
+            const totalDays = DateUtils.getDaysBetween(startDate, endDate);
+            const elapsedDays = DateUtils.getDaysBetween(startDate, today);
+            const remainingDays = DateUtils.getDaysBetween(today, endDate);
+            const progress = Math.round((elapsedDays / totalDays) * 100);
+
+            document.getElementById('daysLeft').textContent = `${remainingDays}일`;
+            document.getElementById('progressPercent').textContent = `${progress}%`;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('membershipInfo').textContent =
+                `활성 회원권: 3개월권 (D-${remainingDays})`;
+        }
+
+        // 초기화
+        generateAttendanceCalendar();
+        calculateMembershipProgress();
+    </script>
+</body>
+</html>
