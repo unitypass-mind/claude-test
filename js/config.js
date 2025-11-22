@@ -145,7 +145,7 @@ const CONFIG = {
     },
 
     // 개발 모드
-    DEBUG: window.location.hostname === 'localhost'
+    DEBUG: window.location.hostname === 'localhost' || window.location.protocol === 'file:'
 };
 
 // 설정을 전역으로 접근 가능하게 설정 (읽기 전용)

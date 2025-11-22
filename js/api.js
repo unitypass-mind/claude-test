@@ -215,7 +215,7 @@ const api = new ApiClient();
 // ==============================================
 
 const MockAPI = {
-    enabled: false, // Mock API 사용 여부
+    enabled: true, // Mock API 사용 여부 (개발용으로 기본 활성화)
 
     // Mock 데이터
     data: {
